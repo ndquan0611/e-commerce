@@ -1,0 +1,29 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon --inspect index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ndquan0611/e-commerce.git"
+  },
+  "keywords": [
+    "nodejs"
+  ],
+  "author": "ndquan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ndquan0611/e-commerce/issues"
+  },
+  "homepage": "https://github.com/ndquan0611/e-commerce#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
