@@ -71,5 +71,11 @@ User.pre('save', async function (next) {
     }
 });
 
+User.methods = {
+    isCorrectPassword: async function (password) {
+        return await bcrypt.compare(password, this.password);
+    },
+};
+
 //Export the model
 module.exports = mongoose.model('User', User);

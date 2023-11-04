@@ -8,17 +8,48 @@ class UserController {
     }
 
     // [POST] /register
-    register(req, res, next) {
-        const user = new User(req.body);
-        user.save()
-            .then(() => {
+    async register(req, res, next) {
+        const { email } = req.body;
+
+        try {
+            const existingUser = await User.findOne({ email });
+            if (existingUser) {
+                throw new Error('User has existed');
+            } else {
+                const newUser = new User(req.body);
+                const user = await newUser.save();
                 res.json({
-                    status: 'OK',
-                    message: 'Insert User successfully',
+                    status: 'Ok',
+                    message: 'Register user successfully',
                     data: user,
                 });
-            })
-            .catch(next);
+            }
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    // [POST] /login
+    async login(req, res, next) {
+        const { email, password } = req.body;
+
+        try {
+            // Plain Object
+            const response = await User.findOne({ email });
+            if (response && (await response.isCorrectPassword(password))) {
+                const { password, role, ...userData } = response.toObject();
+
+                res.json({
+                    status: 'Ok',
+                    message: 'Login to your account successfully',
+                    data: userData,
+                });
+            } else {
+                throw new Error('Invalid credentials');
+            }
+        } catch (error) {
+            next(error);
+        }
     }
 }
 

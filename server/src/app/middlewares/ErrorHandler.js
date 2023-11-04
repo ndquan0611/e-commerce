@@ -12,7 +12,6 @@ module.exports = {
             message: err.message,
             data: '',
         });
-
         next();
     },
 };
