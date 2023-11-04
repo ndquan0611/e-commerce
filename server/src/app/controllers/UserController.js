@@ -12,7 +12,11 @@ class UserController {
         const user = new User(req.body);
         user.save()
             .then(() => {
-                res.json({ message: 'Successfully', user });
+                res.json({
+                    status: 'OK',
+                    message: 'Insert User successfully',
+                    data: user,
+                });
             })
             .catch(next);
     }

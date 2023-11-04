@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.Types.ObjectId;
@@ -59,7 +60,16 @@ var User = new Schema(
     }
 );
 
-User.pre('save', () => {});
+// Hash a password
+User.pre('save', async function (next) {
+    if (this.isModified('password')) {
+        const saltRounds = 10;
+        const salt = bcrypt.genSaltSync(saltRounds);
+        this.password = bcrypt.hashSync(this.password, salt);
+    } else {
+        next();
+    }
+});
 
 //Export the model
 module.exports = mongoose.model('User', User);
