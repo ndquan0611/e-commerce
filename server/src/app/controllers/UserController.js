@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 const User = require('../models/Users');
 const {
     generateAccessToken,
@@ -5,12 +6,6 @@ const {
 } = require('../../utils/jwt');
 
 class UserController {
-    index(req, res, next) {
-        User.find({})
-            .then((users) => res.json(users))
-            .catch(next);
-    }
-
     // [POST] /register
     async register(req, res, next) {
         try {
@@ -74,6 +69,7 @@ class UserController {
         }
     }
 
+    // [GET] /current
     async getCurrent(req, res, next) {
         try {
             const { _id } = req.user;
@@ -85,6 +81,38 @@ class UserController {
                 message: 'Find user account',
                 data: user,
             });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async refreshAccessToken(req, res, next) {
+        try {
+            // Lấy token từ cookies
+            const cookie = req.cookies;
+            // Check xem có token hay không
+            if (!cookie && !cookie.refreshToken)
+                throw new Error('No refresh token in cookies');
+            // Check token có hợp lệ hay không
+            await jwt.verify(
+                cookie.refreshToken,
+                process.env.JWT_SECRET,
+                async function (err, decode) {
+                    if (err) throw new Error('Invalid refresh token');
+                    const response = await User.findOne({
+                        _id: decode._id,
+                        refreshToken: cookie.refreshToken,
+                    });
+                    return res.json({
+                        status: 'Ok',
+                        message: 'Token valid',
+                        newAccessToken: generateAccessToken(
+                            response._id,
+                            response.role
+                        ),
+                    });
+                }
+            );
         } catch (error) {
             next(error);
         }

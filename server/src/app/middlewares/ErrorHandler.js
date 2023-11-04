@@ -10,7 +10,6 @@ module.exports = {
         res.status(statusCode).json({
             status: 'Failed',
             message: err.message,
-            data: '',
         });
         next();
     },
