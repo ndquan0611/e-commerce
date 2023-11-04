@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 require('dotenv').config();
+const cookieParser = require('cookie-parser');
 
 const app = express();
 const port = process.env.PORT || 8888;
@@ -16,6 +17,9 @@ app.use(morgan('combined'));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+// Cookie
+app.use(cookieParser());
 
 // Route init
 route(app);
