@@ -105,7 +105,7 @@ class UserController {
                     });
                     return res.json({
                         status: 'Ok',
-                        message: 'Token valid',
+                        message: 'Refresh token not matched',
                         newAccessToken: generateAccessToken(
                             response._id,
                             response.role
@@ -113,6 +113,31 @@ class UserController {
                     });
                 }
             );
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async logout(req, res, next) {
+        try {
+            const cookie = req.cookies;
+            if (!cookie || !cookie.refreshToken)
+                throw new Error('No refresh token in cookies');
+            // Xóa refresh token ở db
+            await User.findOneAndDelete(
+                {
+                    refreshToken: cookie.refreshAccessToken,
+                },
+                { refreshToken: '' },
+                { new: true }
+            );
+            // Xóa refresh ở cookie
+            res.clearCookie('refreshToken', { httpOnly: true, secure: true });
+
+            return res.json({
+                status: 'Ok',
+                message: 'Logout is done',
+            });
         } catch (error) {
             next(error);
         }
