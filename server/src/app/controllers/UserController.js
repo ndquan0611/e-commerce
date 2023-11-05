@@ -1,12 +1,14 @@
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const User = require('../models/Users');
 const {
     generateAccessToken,
     generateRefreshToken,
 } = require('../../utils/jwt');
+const { sendMail } = require('../../utils/sendMail');
 
 class UserController {
-    // [POST] /register
+    // [POST] /api/user/register
     async register(req, res, next) {
         try {
             const { email } = req.body;
@@ -28,7 +30,7 @@ class UserController {
         }
     }
 
-    // [POST] /login
+    // [POST] /api/user/login
     async login(req, res, next) {
         // Refresh token => Cấp mới access token
         // Access token => Xác thực người dùng, phân quyền người dùng
@@ -69,7 +71,7 @@ class UserController {
         }
     }
 
-    // [GET] /current
+    // [GET] /api/user/current
     async getCurrent(req, res, next) {
         try {
             const { _id } = req.user;
@@ -86,6 +88,7 @@ class UserController {
         }
     }
 
+    // [POST] /api/user/refreshtoken
     async refreshAccessToken(req, res, next) {
         try {
             // Lấy token từ cookies
@@ -118,6 +121,7 @@ class UserController {
         }
     }
 
+    // [GET] /api/user/logout
     async logout(req, res, next) {
         try {
             const cookie = req.cookies;
@@ -137,6 +141,69 @@ class UserController {
             return res.json({
                 status: 'Ok',
                 message: 'Logout is done',
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    // Client gửi mail
+    // Server check mail có hợp lệ hay không => Gửi mail + kèm theo link (password change token)
+    // Client check mail -> Click vào link
+    // Client gửi api kèm theo token
+    // Check xem token có giống với cái token mà server gửi hay không
+    // Change password
+    // [GET] /api/user/forgotpassword
+    async forgotPassword(req, res, next) {
+        try {
+            const { email } = req.query;
+            if (!email) throw new Error('Missing email');
+            const user = await User.findOne({ email });
+            if (!user) throw new Error('User not found');
+            const resetToken = user.createPasswordChangedToken();
+            await user.save();
+
+            const html = `Xin vui lòng click vào link dưới đây để thay đổi mặt khẩu của bạn.Link này sẽ hết hạn sau 15 phút kể từ bây giờ. 
+            <a href=${process.env.URL_CLIENT}/api/user/reset-password/${resetToken}>Click here</a>`;
+
+            const data = {
+                email,
+                html,
+            };
+
+            const result = await sendMail(data);
+            return res.json({
+                status: 'OK',
+                data: result,
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    // [PUT] /api/user/resetpassword
+    async resetPassword(req, res, next) {
+        try {
+            const { password, token } = req.body;
+            if (!password || !token) throw new Error('Missing imputs');
+            const passwordResetToken = crypto
+                .createHash('sha256')
+                .update(token)
+                .digest('hex');
+            const user = await User.findOne({
+                passwordResetToken,
+                passwordResetExpires: { $gt: Date.now() },
+            });
+            if (!user) throw new Error('Invalid reset token');
+            user.password = password;
+            user.passwordResetToken = undefined;
+            user.passwordChangedAt = Date.now();
+            user.passwordResetExpires = undefined;
+            await user.save();
+
+            return res.json({
+                status: 'Ok',
+                message: 'Update password',
             });
         } catch (error) {
             next(error);
