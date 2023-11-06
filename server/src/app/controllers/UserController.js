@@ -245,6 +245,7 @@ class UserController {
         }
     }
 
+    // [PUT] /api/user/current
     async updateUser(req, res, next) {
         try {
             const { _id } = req.user;
@@ -263,6 +264,7 @@ class UserController {
         }
     }
 
+    // [PUT] /api/user/:id
     async updateUserByAdmin(req, res, next) {
         try {
             const { id } = req.params;
