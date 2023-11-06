@@ -40,19 +40,20 @@ class UserController {
             // Plain Object
             const response = await User.findOne({ email });
             if (response && (await response.isCorrectPassword(password))) {
-                const { password, role, ...userData } = response.toObject();
+                const { password, role, refreshToken, ...userData } =
+                    response.toObject();
                 // Tạo accessToken and refreshToken
                 const accessToken = generateAccessToken(response._id, role);
-                const refreshToken = generateRefreshToken(response._id);
+                const newRefreshToken = generateRefreshToken(response._id);
                 // Lưu refreshToken vào database
                 await User.findByIdAndUpdate(
                     response._id,
-                    { refreshToken },
+                    { newRefreshToken },
                     { new: true }
                 );
 
                 // Lưu refreshToken vào Cookie
-                res.cookie('refreshToken', refreshToken, {
+                res.cookie('refreshToken', newRefreshToken, {
                     maxAge: 7 * 24 * 60 * 60 * 1000,
                     httpOnly: true,
                 });
@@ -195,15 +196,85 @@ class UserController {
                 passwordResetExpires: { $gt: Date.now() },
             });
             if (!user) throw new Error('Invalid reset token');
-            user.password = password;
-            user.passwordResetToken = undefined;
-            user.passwordChangedAt = Date.now();
-            user.passwordResetExpires = undefined;
+
+            Object.assign(user, {
+                password,
+                passwordResetToken: undefined,
+                passwordChangedAt: Date.now(),
+                passwordResetExpires: undefined,
+            });
             await user.save();
 
             return res.json({
                 status: 'Ok',
                 message: 'Update password',
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    // [GET] /api/user/
+    async getUsers(req, res, next) {
+        try {
+            const response = await User.find().select(
+                '-refreshToken -password -role'
+            );
+            return res.json({
+                status: 'OK',
+                message: 'List user successfully!',
+                data: response,
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    // [DELETE] /api/user/
+    async destroyUser(req, res, next) {
+        try {
+            const { _id } = req.query;
+            if (!_id) throw new Error('Missing inputs!');
+            const response = await User.findByIdAndDelete(_id);
+            return res.json({
+                status: 'OK',
+                message: `User with email ${response.email} deleted`,
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async updateUser(req, res, next) {
+        try {
+            const { _id } = req.user;
+            if (!_id || Object.keys(req.body).length === 0)
+                throw new Error('Missing inputs!');
+            const response = await User.findByIdAndUpdate(_id, req.body, {
+                new: true,
+            }).select('-password -role');
+            return res.json({
+                status: 'OK',
+                message: 'Update user successfully!',
+                data: response,
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async updateUserByAdmin(req, res, next) {
+        try {
+            const { id } = req.params;
+            if (Object.keys(req.body).length === 0)
+                throw new Error('Missing inputs');
+            const response = await User.findByIdAndUpdate(id, req.body, {
+                new: true,
+            }).select('-password -role -refreshToken');
+            return res.json({
+                status: 'OK',
+                message: 'Update users successfully!',
+                data: response,
             });
         } catch (error) {
             next(error);

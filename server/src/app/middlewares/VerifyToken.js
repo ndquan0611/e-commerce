@@ -30,4 +30,19 @@ module.exports = {
             next(error);
         }
     },
+
+    IsAdmin: async function (req, res, next) {
+        try {
+            const { role } = req.user;
+            if (role !== 'admin')
+                return res.json({
+                    status: 'Failed',
+                    message: 'Require admin role',
+                });
+
+            next();
+        } catch (error) {
+            next(error);
+        }
+    },
 };
