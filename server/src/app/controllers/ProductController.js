@@ -41,11 +41,47 @@ class ProductController {
     // [GET] /api/product
     async getProducts(req, res, next) {
         try {
-            const products = await Product.find();
+            const queries = { ...req.query };
+            // Tách các trường đặt biệt ra khỏi query
+            const exculeFields = ['limit', 'sort', 'page', 'fields'];
+            exculeFields.forEach((item) => delete queries[item]);
+
+            // Format lại các operators cho đúng cú pháp của mongoose
+            let queryString = JSON.stringify(queries);
+            queryString = queryString.replace(
+                /\b(gte|gt|lt|lte)\b/g,
+                (macthedEl) => `$${macthedEl}`
+            );
+            const formatedQueries = JSON.parse(queryString);
+
+            // Filtering
+            if (queries?.title)
+                formatedQueries.title = {
+                    $regex: queries.title,
+                    $options: 'i',
+                };
+            let queryCommand = Product.find(formatedQueries);
+
+            // Sorting
+            if (req.query.sort) {
+                const sortBy = req.query.sort.split(',').join(' ');
+                queryCommand = queryCommand.sort(sortBy);
+            }
+
+            // Fields limiting
+
+            // Pagination
+
+            // Execute query
+            // Số lượng sp thỏa mãn điều kiện !== số lượng sp trả về một lần gọi API
+            const response = await queryCommand.exec();
+            const counts = await Product.find(formatedQueries).countDocuments();
+
             return res.json({
                 status: 'Ok',
-                message: 'Found got all product',
-                data: products,
+                message: 'Found all products',
+                data: response,
+                counts,
             });
         } catch (error) {
             next(error);
