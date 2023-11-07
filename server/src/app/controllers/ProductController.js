@@ -69,8 +69,19 @@ class ProductController {
             }
 
             // Fields limiting
+            if (req.query.fields) {
+                const fields = req.query.fields.split(',').join(' ');
+                queryCommand = queryCommand.select(fields);
+            }
 
             // Pagination
+            // Limit: số object lấy về một lần gọi api
+            // Skip:
+            const page = +req.query.page || 1;
+            const limit = +req.query.limit || process.env.LIMIT_PRODUCTS;
+            const skip = (page - 1) * limit;
+
+            queryCommand = queryCommand.skip(skip).limit(limit);
 
             // Execute query
             // Số lượng sp thỏa mãn điều kiện !== số lượng sp trả về một lần gọi API
@@ -80,8 +91,8 @@ class ProductController {
             return res.json({
                 status: 'Ok',
                 message: 'Found all products',
-                data: response,
                 counts,
+                data: response,
             });
         } catch (error) {
             next(error);
@@ -121,6 +132,51 @@ class ProductController {
                     ? 'Delete product successfully!'
                     : 'Cannot delete product!',
                 data: product,
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async ratings(req, res, next) {
+        try {
+            const { _id } = req.user;
+            const { star, comment, id } = req.body;
+            if (!star || !id) throw new Error('Missing inputs!');
+            const ratingProduct = await Product.findById(id);
+            const alreadyRating = ratingProduct?.ratings?.find(
+                (rating) => rating.postedBy.toString() === _id
+            );
+
+            if (alreadyRating) {
+                // Update star & comment
+                await Product.updateOne(
+                    {
+                        ratings: { $elemMatch: alreadyRating },
+                    },
+                    {
+                        $set: {
+                            'ratings.$.star': star,
+                            'ratings.$.comment': comment,
+                        },
+                    },
+                    {
+                        new: true,
+                    }
+                );
+            } else {
+                // Add star & comment
+                await Product.findByIdAndUpdate(
+                    id,
+                    {
+                        $push: { ratings: { star, comment, postedBy: _id } },
+                    },
+                    { new: true }
+                );
+            }
+
+            return res.json({
+                status: 'Ok',
             });
         } catch (error) {
             next(error);

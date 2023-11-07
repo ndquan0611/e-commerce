@@ -9,6 +9,8 @@ const {
 
 router.post('/', VerifyAccessToken, IsAdmin, productController.createProduct);
 router.get('/', productController.getProducts);
+router.put('/ratings', VerifyAccessToken, productController.ratings);
+
 router.get('/:id', productController.getProduct);
 router.put('/:id', VerifyAccessToken, IsAdmin, productController.updateProduct);
 router.delete(
