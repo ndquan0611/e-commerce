@@ -231,7 +231,7 @@ class UserController {
     }
 
     // [DELETE] /api/user/
-    async destroyUser(req, res, next) {
+    async deleteUser(req, res, next) {
         try {
             const { _id } = req.query;
             if (!_id) throw new Error('Missing inputs!');

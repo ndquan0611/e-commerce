@@ -15,7 +15,7 @@ router.get('/logout', userController.logout);
 router.get('/forgotpassword', userController.forgotPassword);
 router.put('/resetpassword', userController.resetPassword);
 router.get('/', VerifyAccessToken, IsAdmin, userController.getUsers);
-router.delete('/', VerifyAccessToken, IsAdmin, userController.destroyUser);
+router.delete('/', VerifyAccessToken, IsAdmin, userController.deleteUser);
 router.put('/current', VerifyAccessToken, userController.updateUser);
 router.put(
     '/:id',

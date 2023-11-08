@@ -138,6 +138,7 @@ class ProductController {
         }
     }
 
+    // [PUT] /api/product/ratings
     async ratings(req, res, next) {
         try {
             const { _id } = req.user;
@@ -175,8 +176,20 @@ class ProductController {
                 );
             }
 
+            // Sun ratings
+            const updateProduct = await Product.findById(id);
+            const ratingCount = updateProduct.ratings.length;
+            const sumRating = updateProduct.ratings.reduce(
+                (acc, cur) => acc + +cur.star,
+                0
+            );
+            updateProduct.totalRatings =
+                Math.round((sumRating * 10) / ratingCount) / 10;
+            await updateProduct.save();
+
             return res.json({
                 status: 'Ok',
+                data: updateProduct,
             });
         } catch (error) {
             next(error);
