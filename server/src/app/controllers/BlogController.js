@@ -57,7 +57,7 @@ class BlogController {
     async likeBlog(req, res, next) {
         try {
             const { _id } = req.user;
-            const { id } = req.body;
+            const { id } = req.params;
             if (!id) throw new Error('Missing input!');
             const blog = await Blog.findById(id);
             const alreadyDisliked = blog.dislikes.find(
@@ -102,6 +102,93 @@ class BlogController {
                     data: response,
                 });
             }
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    // [PUT] /api/blog/dislike
+    async dislikeBlog(req, res, next) {
+        try {
+            const { _id } = req.user;
+            const { id } = req.params;
+            if (!id) throw new Error('Missing input!');
+            const blog = await Blog.findById(id);
+            const alreadyLiked = blog.likes.find((e) => e.toString() === _id);
+            if (alreadyLiked) {
+                const response = await Blog.findByIdAndUpdate(
+                    id,
+                    {
+                        $pull: { likes: _id },
+                    },
+                    { new: true }
+                );
+                return res.json({
+                    status: response ? 'OK' : 'Failed',
+                    data: response,
+                });
+            }
+            const isDisliked = blog.dislikes.find((e) => e.toString() === _id);
+            if (isDisliked) {
+                const response = await Blog.findByIdAndUpdate(
+                    id,
+                    {
+                        $pull: { dislikes: _id },
+                    },
+                    { new: true }
+                );
+                return res.json({
+                    status: response ? 'OK' : 'Failed',
+                    data: response,
+                });
+            } else {
+                const response = await Blog.findByIdAndUpdate(
+                    id,
+                    {
+                        $push: { dislikes: _id },
+                    },
+                    { new: true }
+                );
+                return res.json({
+                    status: response ? 'OK' : 'Failed',
+                    data: response,
+                });
+            }
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    // [GET] /api/blog/:id
+    async getBlog(req, res, next) {
+        try {
+            const blog = await Blog.findByIdAndUpdate(
+                req.params.id,
+                {
+                    $inc: { numberView: 1 },
+                },
+                { new: true }
+            )
+                .populate('likes', 'firstname lastname')
+                .populate('dislikes', 'firstname lastname');
+            return res.json({
+                status: blog ? 'OK' : 'Failed',
+                data: blog,
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    // [DELETE] /api/blog
+    async deleteBlog(req, res, next) {
+        try {
+            const blog = await Blog.findByIdAndDelete(req.params.id);
+            return res.json({
+                status: 'OK',
+                message: 'Delete blog successfully',
+                data: blog,
+            });
         } catch (error) {
             next(error);
         }

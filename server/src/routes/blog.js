@@ -9,8 +9,11 @@ const {
 
 router.post('/', VerifyAccessToken, IsAdmin, blogController.createBlog);
 router.get('/', blogController.getBlogs);
-router.put('/like', VerifyAccessToken, blogController.likeBlog);
 
+router.put('/like/:id', VerifyAccessToken, blogController.likeBlog);
+router.put('/dislike/:id', VerifyAccessToken, blogController.dislikeBlog);
+router.get('/:id', blogController.getBlog);
 router.put('/:id', VerifyAccessToken, IsAdmin, blogController.updateBlog);
+router.delete('/:id', VerifyAccessToken, IsAdmin, blogController.deleteBlog);
 
 module.exports = router;
