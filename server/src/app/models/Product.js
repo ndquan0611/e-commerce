@@ -40,7 +40,7 @@ var Product = new Schema(
             type: Number,
             default: 0,
         },
-        image: {
+        images: {
             type: Array,
         },
         color: {

@@ -195,6 +195,16 @@ class ProductController {
             next(error);
         }
     }
+
+    // [PUT] /api/uploadimgae/:id
+    async uploadImagesProduct(req, res, next) {
+        try {
+            console.log(req.file);
+            return res.json('Oke');
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 module.exports = new ProductController();
