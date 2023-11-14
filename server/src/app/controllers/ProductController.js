@@ -199,8 +199,19 @@ class ProductController {
     // [PUT] /api/uploadimgae/:id
     async uploadImagesProduct(req, res, next) {
         try {
-            console.log(req.file);
-            return res.json('Oke');
+            if (!req.files) throw new Error('Missing input!');
+            const response = await Product.findByIdAndUpdate(
+                req.params.id,
+                {
+                    $push: { images: { $each: req.files.map((e) => e.path) } },
+                },
+                { new: true }
+            );
+            return res.json({
+                status: 'Ok',
+                message: 'Upload image product successfully',
+                data: response,
+            });
         } catch (error) {
             next(error);
         }

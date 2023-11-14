@@ -193,6 +193,27 @@ class BlogController {
             next(error);
         }
     }
+
+    // [PUT] /api/uploadimgae/:id
+    async uploadImageBlog(req, res, next) {
+        try {
+            if (!req.file) throw new Error('Missing input!');
+            const response = await Blog.findByIdAndUpdate(
+                req.params.id,
+                {
+                    image: req.file.path,
+                },
+                { new: true }
+            );
+            return res.json({
+                status: 'Ok',
+                message: 'Upload image blog successfully',
+                data: response,
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 module.exports = new BlogController();

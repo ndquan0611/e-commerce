@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const uploader = require('../config/cloudinary.config');
 
 const blogController = require('../app/controllers/BlogController');
 const {
@@ -10,6 +11,13 @@ const {
 router.post('/', VerifyAccessToken, IsAdmin, blogController.createBlog);
 router.get('/', blogController.getBlogs);
 
+router.put(
+    '/uploadimage/:id',
+    VerifyAccessToken,
+    IsAdmin,
+    uploader.single('image'),
+    blogController.uploadImageBlog
+);
 router.put('/like/:id', VerifyAccessToken, blogController.likeBlog);
 router.put('/dislike/:id', VerifyAccessToken, blogController.dislikeBlog);
 router.get('/:id', blogController.getBlog);

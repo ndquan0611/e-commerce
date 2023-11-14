@@ -15,10 +15,16 @@ var Order = new Schema(
         ],
         status: {
             type: String,
-            default: 'Processing',
-            enum: ['Cancelled', 'Processing', 'Successed'],
+            default: 'Proccessing',
+            enum: ['Cancelled', 'Proccessing', 'Succeed'],
         },
-        paymentIntent: {},
+        total: {
+            type: Number,
+        },
+        coupon: {
+            type: ObjectId,
+            ref: 'Coupon',
+        },
         orderBy: {
             type: ObjectId,
             ref: 'User',

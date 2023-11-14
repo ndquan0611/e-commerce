@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const User = require('../models/Users');
+const User = require('../models/User');
 const {
     generateAccessToken,
     generateRefreshToken,
@@ -275,9 +275,106 @@ class UserController {
             }).select('-password -role -refreshToken');
             return res.json({
                 status: 'OK',
-                message: 'Update users successfully!',
+                message: 'Update user by admin successfully!',
                 data: response,
             });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    // [PUT] /api/user/address
+    async updateAddressUser(req, res, next) {
+        try {
+            const { _id } = req.user;
+            if (!req.body.address) throw new Error('Missing input!');
+            // Kiểm tra xem địa chỉ đã tồn tại hay chưa
+            const existingUser = await User.findOne({
+                _id,
+                address: req.body.address,
+            });
+
+            if (existingUser) {
+                // Nếu địa chỉ đã tồn tại, không thêm mới và trả về thông báo
+                return res.json({
+                    status: 'OK',
+                    message: 'Address already exists!',
+                    data: existingUser,
+                });
+            }
+
+            // Nếu địa chỉ chưa tồn tại, thêm mới địa chỉ
+            const response = await User.findByIdAndUpdate(
+                _id,
+                {
+                    $push: { address: req.body.address },
+                },
+                { new: true }
+            ).select('-password -role -refreshToken');
+            return res.json({
+                status: 'OK',
+                message: 'Update address successfully!',
+                data: response,
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    // [PUT] /api/user/cart
+    async updateCart(req, res, next) {
+        try {
+            const { _id } = req.user;
+            const { id, quantity, color } = req.body;
+            if (!id || !quantity || !color) throw new Error('Missing inputs!');
+            const user = await User.findById(_id).select('cart');
+            const alreadyProduct = user.cart.find(
+                (e) => e.product.toString() === id
+            );
+
+            if (alreadyProduct) {
+                if (alreadyProduct.color === color) {
+                    const response = await User.updateOne(
+                        { cart: { $elemMatch: alreadyProduct } },
+                        { $set: { 'cart.$.quantity': quantity } },
+                        { new: true }
+                    );
+
+                    return res.json({
+                        status: 'OK',
+                        message: 'Update cart user successfully!',
+                        data: response,
+                    });
+                } else {
+                    const response = await User.findByIdAndUpdate(
+                        _id,
+                        {
+                            $push: { cart: { product: id, quantity, color } },
+                        },
+                        { new: true }
+                    );
+
+                    return res.json({
+                        status: 'OK',
+                        message: 'Update cart user successfully!',
+                        data: response,
+                    });
+                }
+            } else {
+                const response = await User.findByIdAndUpdate(
+                    _id,
+                    {
+                        $push: { cart: { product: id, quantity, color } },
+                    },
+                    { new: true }
+                );
+
+                return res.json({
+                    status: 'OK',
+                    message: 'Update cart user successfully!',
+                    data: response,
+                });
+            }
         } catch (error) {
             next(error);
         }

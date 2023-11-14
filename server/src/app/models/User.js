@@ -33,11 +33,16 @@ var User = new Schema(
             type: String,
             default: 'user',
         },
-        cart: {
-            type: Array,
-            default: [],
+        cart: [
+            {
+                product: { type: ObjectId, ref: 'Product' },
+                quantity: Number,
+                color: String,
+            },
+        ],
+        address: {
+            type: String,
         },
-        address: [{ type: ObjectId, ref: 'Address' }],
         wishlist: [{ type: ObjectId, ref: 'Product' }],
         isBlocked: {
             type: Boolean,
