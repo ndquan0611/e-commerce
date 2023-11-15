@@ -13,11 +13,11 @@ var Product = new Schema(
         slug: {
             type: String,
             required: true,
-            unique: true,
+            // unique: true,
             lowercase: true,
         },
         description: {
-            type: String,
+            type: Array,
             required: true,
         },
         brand: {
@@ -29,8 +29,8 @@ var Product = new Schema(
             required: true,
         },
         category: {
-            type: ObjectId,
-            ref: 'Category',
+            type: String,
+            required: true,
         },
         quantity: {
             type: Number,
@@ -45,7 +45,7 @@ var Product = new Schema(
         },
         color: {
             type: String,
-            enum: ['Black', 'Grown', 'Red'],
+            require: true,
         },
         ratings: [
             {

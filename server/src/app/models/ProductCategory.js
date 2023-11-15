@@ -11,6 +11,10 @@ var ProductCategory = new Schema(
             unique: true,
             index: true,
         },
+        brand: {
+            type: Array,
+            required: true,
+        },
     },
     { timestamps: true }
 );

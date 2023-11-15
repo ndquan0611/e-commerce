@@ -6,6 +6,7 @@ const blogCategoryRouter = require('./blogCategory');
 const brandRouter = require('./brand');
 const couponRouter = require('./coupon');
 const orderRouter = require('./order');
+const siteRouter = require('./site');
 const { ErrorHandler, NotFound } = require('../app/middlewares/ErrorHandler');
 
 function route(app) {
@@ -17,6 +18,7 @@ function route(app) {
     app.use('/api/brand', brandRouter);
     app.use('/api/coupon', couponRouter);
     app.use('/api/order', orderRouter);
+    app.use('/api/site/insert', siteRouter);
 
     // Error handling
     app.use(NotFound);
