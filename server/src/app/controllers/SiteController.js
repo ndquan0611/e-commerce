@@ -6,6 +6,7 @@ const categoryData = require('../../../../data/cate_brand');
 
 const createProduct = async (product) => {
     try {
+        // Nếu danh mục tồn tại, sử dụng ObjectId của danh mục đã có
         await Product.create({
             title: product?.name,
             slug: slugify(product?.name) + Math.round(Math.random() * 100) + '',
@@ -16,8 +17,7 @@ const createProduct = async (product) => {
             quantity: Math.round(Math.random() * 1000),
             sold: Math.round(Math.random() * 100),
             images: product?.images,
-            color: product?.variants?.find((e) => e.label === 'Color')
-                ?.variants[0],
+            color: product?.variants?.find((e) => e.label === 'Color')?.variants[0],
         });
     } catch (error) {
         throw new Error(error);
@@ -25,13 +25,15 @@ const createProduct = async (product) => {
 };
 
 const createProductCategory = async (category) => {
-    try {
+    const existingCategory = await ProductCategory.findOne({ title: category?.cate });
+
+    if (!existingCategory) {
         await ProductCategory.create({
             title: category?.cate,
             brand: category?.brand,
         });
-    } catch (error) {
-        throw new Error(error);
+    } else {
+        console.log(`Danh mục "${category?.cate}" đã tồn tại.`);
     }
 };
 

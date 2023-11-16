@@ -61,7 +61,7 @@ var Product = new Schema(
     },
     {
         timestamps: true,
-    }
+    },
 );
 
 //Export the model
