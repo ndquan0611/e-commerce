@@ -2,6 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 require('dotenv').config();
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 
 const app = express();
 const port = process.env.PORT || 8888;
@@ -15,6 +16,12 @@ db.connect();
 // HTTP logger
 app.use(morgan('combined'));
 
+app.use(
+    cors({
+        origin: process.env.CLIENT_URL,
+        methods: ['POST', 'GET', 'PUT', 'DELETE'],
+    }),
+);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 

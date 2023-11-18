@@ -1,7 +1,43 @@
 @tailwind components;
 
 @layer components {
+    .wrapper {
+        @apply w-full h-header flex justify-center;
+    }
+
+    .inner {
+        @apply w-main h-full px-horizontal gap-5 flex items-center justify-between;
+    }
+
+    .actions {
+        @apply w-3/4 h-10 flex items-center justify-end;
+    }
+
+    .action-support {
+        @apply px-horizontal text-center border-solid;
+
+        &:nth-child(2) {
+            @apply border-l border-r border-borderColor;
+        }
+    }
+
+    .cart-btn {
+        @apply relative cursor-pointer ml-5 mr-5;
+    }
+
+    .badge {
+        @apply absolute -top-2 -right-3 px-[6px] h-5 leading-5 text-[12px] font-semibold bg-primary text-white rounded-[20px] border-solid border-white border;
+    }
+
     .heading {
-        color: red;
+        @apply flex items-center text-[13px] font-semibold uppercase;
+    }
+
+    .extra {
+        @apply text-[12px] font-normal;
+    }
+
+    .user-avatar {
+        @apply w-8 h-8 ml-4 rounded-full object-cover cursor-pointer;
     }
 }

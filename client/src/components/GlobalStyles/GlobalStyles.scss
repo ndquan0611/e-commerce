@@ -4,5 +4,15 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer components {
+@layer base {
+    body {
+        @apply font-poppins text-textColor leading-normal;
+    }
+
+    button,
+    input,
+    [tabindex] {
+        outline: none;
+        border: none;
+    }
 }

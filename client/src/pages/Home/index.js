@@ -1,7 +1,15 @@
+import Banner from '~/components/Banner';
+import Sidebar from '~/components/Sidebar';
+
 function Home() {
     return (
         <div>
-            <h1>Home page</h1>
+            <div className="-mx-[20px]">
+                <div className="px-horizontal mb-[30px] flex gap-5">
+                    <Sidebar />
+                    <Banner />
+                </div>
+            </div>
         </div>
     );
 }
