@@ -20,11 +20,7 @@ class BlogCategoryController {
     // [PUT] /api/blogcategory/:id
     async updateCategory(req, res, next) {
         try {
-            const response = await BlogCategory.findByIdAndUpdate(
-                req.params.id,
-                req.body,
-                { new: true }
-            );
+            const response = await BlogCategory.findByIdAndUpdate(req.params.id, req.body, { new: true });
             return res.json({
                 status: 'OK',
                 message: 'Update categories successfully',
@@ -53,9 +49,7 @@ class BlogCategoryController {
     // [DELETE] /api/blogcategory/:id
     async deleteCategory(req, res, next) {
         try {
-            const response = await BlogCategory.findByIdAndDelete(
-                req.params.id
-            );
+            const response = await BlogCategory.findByIdAndDelete(req.params.id);
 
             return res.json({
                 status: 'OK',

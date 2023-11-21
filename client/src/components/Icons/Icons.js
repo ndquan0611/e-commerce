@@ -1,4 +1,4 @@
-import { faEnvelope, faPhone, faCartShopping, faCaretDown } from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope, faPhone, faCartShopping, faCaretDown, faList, faStar } from '@fortawesome/free-solid-svg-icons';
 import CustomFontAwesomeIcon from '~/components/Icons/CustomFontAwesomeIcon';
 
 export const PhoneIcon = ({ width = '0.8125rem', height = '0.8125rem', className }) => (
@@ -15,4 +15,12 @@ export const CartIcon = ({ width = '1.5rem', height = '1.5rem', className }) => 
 
 export const ArrowDownIcon = ({ width = '0.625rem', height = '0.625rem', className }) => (
     <CustomFontAwesomeIcon icon={faCaretDown} className={className} width={width} height={height} />
+);
+
+export const ListIcon = ({ width = '1rem', height = '1rem', className }) => (
+    <CustomFontAwesomeIcon icon={faList} className={className} width={width} height={height} />
+);
+
+export const StarIcon = ({ width = '1.25rem', height = '1.25rem', className }) => (
+    <CustomFontAwesomeIcon icon={faStar} className={className} width={width} height={height} color="#d11" />
 );

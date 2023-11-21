@@ -1,0 +1,23 @@
+@tailwind components;
+
+@layer components {
+    .wrapper {
+        @apply w-3/4;
+    }
+
+    .tabs {
+        @apply pb-[15px] mb-5 text-[20px] font-semibold uppercase border-solid border-b-[2px] border-primary;
+    }
+
+    .tab-item {
+        @apply pl-[15px] ml-[15px] border-l border-solid border-borderColor cursor-pointer;
+
+        &:first-child {
+            @apply pl-0 ml-0 border-none;
+        }
+    }
+
+    .content {
+        @apply w-full;
+    }
+}

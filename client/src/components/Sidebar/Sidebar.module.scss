@@ -2,6 +2,10 @@
 
 @layer components {
     .wrapper {
-        @apply w-1/4;
+        @apply w-1/4 border-solid border border-borderElement;
+    }
+
+    .collections {
+        @apply px-horizontal py-verticalTopHeader bg-primary text-white  font-semibold uppercase;
     }
 }

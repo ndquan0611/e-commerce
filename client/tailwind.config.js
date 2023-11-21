@@ -11,6 +11,7 @@ module.exports = {
                 textColor: '#505050',
                 blackColor: '#1d1d1d',
                 borderColor: '#0000001a',
+                borderElement: '#ebebeb',
             },
             width: {
                 main: '1220px',

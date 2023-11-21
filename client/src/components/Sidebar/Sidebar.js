@@ -1,23 +1,27 @@
+import { useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 
-import * as appService from '~/services/appService';
+import { ListIcon } from '~/components/Icons';
+import { handleSlug } from '~/utils/helpers';
+import Menu, { MenuItem } from './Menu';
 import styles from './Sidebar.module.scss';
-import { useEffect } from 'react';
 
 const cx = classNames.bind(styles);
 
 function Sidebar() {
-    useEffect(() => {
-        const fetch = async () => {
-            const res = await appService.apiGetCategories();
-            console.log(res);
-        };
-        fetch();
-    }, []);
+    const { categories } = useSelector((state) => state.app);
 
     return (
         <aside className={cx('wrapper')}>
-            <h1>Sidebar page</h1>
+            <div className={cx('collections')}>
+                <ListIcon />
+                <span className={cx('ml-[10px]')}>All Collections</span>
+            </div>
+            <Menu>
+                {categories?.map((category) => (
+                    <MenuItem key={category.id} title={category.title} to={handleSlug(category.title)} />
+                ))}
+            </Menu>
         </aside>
     );
 }

@@ -4,6 +4,7 @@ import Home from '~/pages/Home';
 
 const publicRoutes = [
     {
+        id: 1,
         path: config.routes.home,
         component: Home,
     },

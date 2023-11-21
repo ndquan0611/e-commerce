@@ -1,0 +1,11 @@
+@tailwind components;
+
+@layer components {
+    .menu-item {
+        @apply px-horizontal py-[15px] flex items-center text-[14px] text-blackColor font-normal;
+    }
+
+    .title {
+        @apply hover:text-primary;
+    }
+}

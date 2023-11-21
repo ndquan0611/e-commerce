@@ -6,7 +6,7 @@
     }
 
     .container {
-        @apply w-main max-w-full px-horizontal flex;
+        @apply w-main max-w-full overflow-hidden;
     }
 
     .content {

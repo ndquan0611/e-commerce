@@ -30,9 +30,4 @@ instance.interceptors.response.use(
     },
 );
 
-export const get = async (path) => {
-    const res = await instance.get(path);
-    return res;
-};
-
 export default instance;
