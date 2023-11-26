@@ -1,0 +1,7 @@
+@tailwind components;
+
+@layer components {
+    .wrapper {
+        @apply w-10 h-10 mx-[5px] flex items-center border border-solid border-[#c5cfd6] rounded-full bg-white hover:text-white hover:bg-[#2a2a2a] hover:border-transparent;
+    }
+}

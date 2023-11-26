@@ -1,0 +1,7 @@
+@tailwind components;
+
+@layer components {
+    .wrapper {
+        @apply w-[32.5%] flex flex-col px-[5px] py-[10px] bg-[#f4f4f4] text-center;
+    }
+}

@@ -1,4 +1,15 @@
-import { faEnvelope, faPhone, faCartShopping, faCaretDown, faList, faStar } from '@fortawesome/free-solid-svg-icons';
+import {
+    faEnvelope,
+    faPhone,
+    faCartShopping,
+    faCaretDown,
+    faList,
+    faStar,
+    faBars,
+    faHeart,
+    faEye,
+} from '@fortawesome/free-solid-svg-icons';
+import { faStar as faStarHollow } from '@fortawesome/free-regular-svg-icons';
 import CustomFontAwesomeIcon from '~/components/Icons/CustomFontAwesomeIcon';
 
 export const PhoneIcon = ({ width = '0.8125rem', height = '0.8125rem', className }) => (
@@ -23,4 +34,20 @@ export const ListIcon = ({ width = '1rem', height = '1rem', className }) => (
 
 export const StarIcon = ({ width = '1.25rem', height = '1.25rem', className }) => (
     <CustomFontAwesomeIcon icon={faStar} className={className} width={width} height={height} color="#d11" />
+);
+
+export const StarHollowIcon = ({ width = '1.25rem', height = '1.25rem', className }) => (
+    <CustomFontAwesomeIcon icon={faStarHollow} className={className} width={width} height={height} />
+);
+
+export const MenuIcon = ({ width = '0.9 rem', height = '0.9 rem', className }) => (
+    <CustomFontAwesomeIcon icon={faBars} className={className} width={width} height={height} />
+);
+
+export const HeartIcon = ({ width = '0.9 rem', height = '0.9 rem', className }) => (
+    <CustomFontAwesomeIcon icon={faHeart} className={className} width={width} height={height} />
+);
+
+export const EyeIcon = ({ width = '0.9 rem', height = '0.9 rem', className }) => (
+    <CustomFontAwesomeIcon icon={faEye} className={className} width={width} height={height} />
 );

@@ -1,0 +1,43 @@
+@tailwind components;
+
+@layer components {
+    .wrapper {
+        @apply w-1/4 p-horizontal border-solid border border-borderElement;
+    }
+
+    .header {
+        @apply relative w-full mb-[50px] text-center text-[20px] font-semibold uppercase;
+    }
+
+    .thumb {
+        @apply mb-8;
+    }
+
+    .content {
+        @apply text-center;
+    }
+
+    .title {
+        @apply mb-2 capitalize overflow-hidden select-none;
+
+        a {
+            @apply text-[#2b3743] font-normal hover:text-primary cursor-pointer;
+
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 1; /* Số dòng hiển thị */
+        }
+    }
+
+    .rating-star {
+        @apply mb-[15px];
+    }
+
+    .money {
+        @apply mb-5 text-[#333] font-normal select-none;
+    }
+
+    .option-btn {
+        @apply text-[14px] font-normal uppercase;
+    }
+}

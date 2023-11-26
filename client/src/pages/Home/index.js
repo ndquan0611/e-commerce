@@ -1,5 +1,6 @@
 import Banner from '~/components/Banner';
 import BestSeller from '~/components/BestSeller';
+import DealDaily from '~/components/DealDaily';
 import Sidebar from '~/components/Sidebar';
 
 function Home() {
@@ -10,8 +11,8 @@ function Home() {
                 <Banner />
             </div>
 
-            <div className="px-horizontal mb-[30px] flex gap-5 overflow-hidden">
-                <div className="w-1/4"></div>
+            <div className="px-horizontal mb-[30px] flex gap-5">
+                <DealDaily />
                 <BestSeller />
             </div>
         </div>

@@ -19,6 +19,7 @@ const createProduct = async (product) => {
             images: product?.images,
             color: product?.variants?.find((e) => e.label === 'Color')?.variants[0],
             thumb: product?.thumb,
+            totalRatings: 4,
         });
     } catch (error) {
         throw new Error(error);

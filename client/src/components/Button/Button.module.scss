@@ -1,0 +1,28 @@
+@tailwind components;
+
+@layer components {
+    .wrapper {
+        @apply inline-flex items-center justify-center w-full px-[15px] py-2 text-base font-bold font-poppins cursor-pointer bg-transparent border border-solid border-transparent select-none;
+
+        + .wrapper {
+            @apply ml-2;
+        }
+
+        &.disabled {
+            @apply pointer-events-none opacity-50;
+        }
+    }
+
+    .icon + .title,
+    .title + .icon {
+        @apply ml-2;
+    }
+
+    .icon {
+        @apply inline-block text-center;
+    }
+
+    .primary {
+        @apply text-white bg-primary border-primary hover:bg-[#333] hover:border-[#333];
+    }
+}

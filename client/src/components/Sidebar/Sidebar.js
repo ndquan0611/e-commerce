@@ -19,7 +19,7 @@ function Sidebar() {
             </div>
             <Menu>
                 {categories?.map((category) => (
-                    <MenuItem key={category.id} title={category.title} to={handleSlug(category.title)} />
+                    <MenuItem key={category._id} title={category.title} to={handleSlug(category.title)} />
                 ))}
             </Menu>
         </aside>

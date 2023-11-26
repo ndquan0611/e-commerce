@@ -15,7 +15,7 @@ function DefaultLayout({ children }) {
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(fetchGetCategories());
-    });
+    }, [dispatch]);
 
     return (
         <div className={cx('wrapper')}>
